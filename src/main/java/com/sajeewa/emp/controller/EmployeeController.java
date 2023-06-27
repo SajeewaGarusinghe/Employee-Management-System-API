@@ -24,13 +24,13 @@ public class EmployeeController {
     public ResponseEntity<ResponseDTO> saveEmployee(@RequestBody EmployeeDTO employeeDTO) {
         try {
             String res = employeeService.saveEmployee(employeeDTO);
-            if (res == "00") {
+            if (res.equals("00")) {
                 responseDTO.setCode(VarList.RSP_SUCCESS);
                 responseDTO.setMessage("Success");
                 responseDTO.setContent(employeeDTO);
                 return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
 
-            } else if (res == "06") {
+            } else if (res.equals("06")) {
                 responseDTO.setCode(VarList.RSP_DUPLICATED);
                 responseDTO.setMessage("Dupplicate found ");
                 responseDTO.setContent(employeeDTO);
@@ -99,6 +99,52 @@ public class EmployeeController {
             responseDTO.setContent(null);
             return new ResponseEntity(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
 
+        }
+    }
+
+    @GetMapping("/searchEmployee/{empID}")
+    public ResponseEntity searchEmployee(@PathVariable int empID){
+        try {
+            EmployeeDTO employeeDTO = employeeService.searchEmployee(empID);
+            if (employeeDTO !=null) {
+                responseDTO.setCode(VarList.RSP_SUCCESS);
+                responseDTO.setMessage("Success");
+                responseDTO.setContent(employeeDTO);
+                return new ResponseEntity(responseDTO, HttpStatus.ACCEPTED);
+            } else {
+                responseDTO.setCode(VarList.RSP_NO_DATA_FOUND);
+                responseDTO.setMessage("No Employee Available For this empID");
+                responseDTO.setContent(null);
+                return new ResponseEntity(responseDTO, HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            responseDTO.setCode(VarList.RSP_ERROR);
+            responseDTO.setMessage(e.getMessage());
+            responseDTO.setContent(e);
+            return new ResponseEntity(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/deleteEmployee/{empID}")
+    public ResponseEntity deleteEmployee(@PathVariable int empID){
+        try {
+            String res = employeeService.deleteEmployee(empID);
+            if (res.equals("00")) {
+                responseDTO.setCode(VarList.RSP_SUCCESS);
+                responseDTO.setMessage("Success");
+                responseDTO.setContent(null);
+                return new ResponseEntity(responseDTO, HttpStatus.ACCEPTED);
+            } else {
+                responseDTO.setCode(VarList.RSP_NO_DATA_FOUND);
+                responseDTO.setMessage("No Employee Available For this empID");
+                responseDTO.setContent(null);
+                return new ResponseEntity(responseDTO, HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            responseDTO.setCode(VarList.RSP_ERROR);
+            responseDTO.setMessage(e.getMessage());
+            responseDTO.setContent(e);
+            return new ResponseEntity(responseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
