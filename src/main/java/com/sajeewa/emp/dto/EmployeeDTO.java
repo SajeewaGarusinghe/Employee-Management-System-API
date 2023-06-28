@@ -1,5 +1,6 @@
 package com.sajeewa.emp.dto;
 
+import com.sajeewa.emp.entity.EmployeeRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,4 +13,5 @@ public class EmployeeDTO {
     private String empName;
     private String empAddress;
     private int empNumber;
+    private EmployeeRole employeeRole;
 }

@@ -4,6 +4,10 @@ import com.sajeewa.emp.dto.EmployeeDTO;
 import com.sajeewa.emp.dto.ResponseDTO;
 import com.sajeewa.emp.service.EmployeeService;
 import com.sajeewa.emp.util.VarList;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +18,20 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/employee")
 @CrossOrigin
+@Tag(name = "Employee")//swagger annotaion to name the controller
 public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
     @Autowired
     private ResponseDTO responseDTO;
+
+    //following line is fo http status codes expected in swagger (note that sample status are added,not accurate ones)
+    @Operation(description = "this is for saving employees", summary = "saving an new Employee", responses = {
+            @ApiResponse(description = "Sucess", responseCode = "200"),
+            @ApiResponse(description = "Dupplicate found", responseCode = "401"),
+            @ApiResponse(description = "unknown erorr", responseCode = "403"),
+            @ApiResponse(description = "exception occurd", responseCode = "404")
+    })
 
     @PostMapping("/saveEmployee")
     public ResponseEntity<ResponseDTO> saveEmployee(@RequestBody EmployeeDTO employeeDTO) {
@@ -52,7 +65,7 @@ public class EmployeeController {
 
 
     }
-
+    @Hidden//this is used to hide peticular mapping in swagger
     @PutMapping(value = "/updateEmployee")
     public ResponseEntity updateEmployee(@RequestBody EmployeeDTO employeeDTO) {
         try {
@@ -103,10 +116,10 @@ public class EmployeeController {
     }
 
     @GetMapping("/searchEmployee/{empID}")
-    public ResponseEntity searchEmployee(@PathVariable int empID){
+    public ResponseEntity searchEmployee(@PathVariable int empID) {
         try {
             EmployeeDTO employeeDTO = employeeService.searchEmployee(empID);
-            if (employeeDTO !=null) {
+            if (employeeDTO != null) {
                 responseDTO.setCode(VarList.RSP_SUCCESS);
                 responseDTO.setMessage("Success");
                 responseDTO.setContent(employeeDTO);
@@ -126,7 +139,7 @@ public class EmployeeController {
     }
 
     @DeleteMapping("/deleteEmployee/{empID}")
-    public ResponseEntity deleteEmployee(@PathVariable int empID){
+    public ResponseEntity deleteEmployee(@PathVariable int empID) {
         try {
             String res = employeeService.deleteEmployee(empID);
             if (res.equals("00")) {
