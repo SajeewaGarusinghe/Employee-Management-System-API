@@ -1,9 +1,6 @@
 package com.sajeewa.emp.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,4 +14,8 @@ public class Address {
     private String streetName;
     private String houseNumber;
     private String zipCode;
+    @OneToOne
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
+
 }
