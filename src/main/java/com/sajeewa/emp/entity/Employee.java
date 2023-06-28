@@ -24,4 +24,8 @@ public class Employee {
     @Column(nullable = false)
     private EmployeeRole employeeRole;
 
+@OneToOne
+@JoinColumn(name = "address_id")
+    private Address address;
+
 }
